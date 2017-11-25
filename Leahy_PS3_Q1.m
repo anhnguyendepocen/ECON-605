@@ -20,12 +20,12 @@ gam_size = size(gam_list)
 iters = gam_size(1,2)
 
 pre_ans_mat = zeros(4)
-ers_ans_mat = pre_ans_mat(:,1:2)
-rkfree_ans_mat = pre_ans_mat(:,1:2)
+ans_mat = pre_ans_mat(:,1:3)
 
 
 for g = 1:iters
 
+%Calculate equity premium
 gamma = gam_list(1,g)
 
 lambda = [1+mu+delta  1+mu-delta]
@@ -49,7 +49,19 @@ uncond_equity_ret = longrunprob' * ERS
 ans_mat(g,1) = gamma
 ans_mat(g,2) = uncond_equity_ret
 
+%Calculate risk free rate
+
+pre_state_ret = lambda_mat*transition
+state_ret = beta*sum(pre_state_ret)
+
+avg_rkfree = state_ret * longrunprob
+
+ans_mat(g,1) = gamma
+ans_mat(g,3) = avg_rkfree
+
 end
+
+ans_mat
  
 
 
