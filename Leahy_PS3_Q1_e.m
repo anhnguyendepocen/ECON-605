@@ -15,11 +15,13 @@ delta = .036
 
 gam_list = [2 4 6 10]
 
-transition = [.43 1-.43; 1-.43 .43]
+r = .017
 
-I = eye(2)
+transition = [.987-r/2 1-.987-r/2 r; 1-.987-r/2 .987-r/2 r; .5 .5 0]
 
-ones = [1 1]
+I = eye(3)
+
+ones = [1 1 1]
 
 gam_size = size(gam_list)
 
@@ -34,8 +36,8 @@ for g = 1:iters
 %Calculate equity premium
 gamma = gam_list(1,g)
 
-lambda = [1+mu+delta  1+mu-delta]
-lambda_mat = [(1+mu+delta)^(1-gamma) 0; 0 (1+mu-delta)^(1-gamma)]
+lambda = [1.02252  1-.06785 .7]
+lambda_mat = [lambda(1,1)^(1-gamma) 0 0; 0 lambda(1,2)^(1-gamma) 0; 0 0 lambda(1,3)^(1-gamma)]
 
 
 %Create W Matrix
@@ -57,7 +59,7 @@ ans_mat(g,2) = uncond_equity_ret
 
 %Calculate risk free rate
 
-lambda_rkfree = [lambda(1,1)^(-gamma) 0; 0 lambda(1,2)^(-gamma)]
+lambda_rkfree = [lambda(1,1)^(-gamma) 0 0; 0 lambda(1,2)^(-gamma) 0; 0 0 lambda(1,3)^(-gamma)]
 
 pre_state_ret = lambda_rkfree*transition
 state_ret = (beta*sum(pre_state_ret))
