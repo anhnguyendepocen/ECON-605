@@ -2,12 +2,12 @@
 %Designed to calculate risk free rate and returns 
 
 %%%%%%
- %Q1c: Risk free rate & unconditional equity return based on Mehra Prescott */
+ %Q1d: Risk free rate & unconditional equity return based on Mehra Prescott */
 %%%%%
 
 
 %Add parameters
-beta = .99
+beta = .97
 
 mu = .018
 
@@ -15,7 +15,7 @@ delta = .036
 
 gam_list = [2 4 6 10]
 
-transition = [.987 1-.987; 1-.516 .516]
+transition = [.915 1-.915; 1-.805 .805]
 
 I = eye(2)
 
@@ -26,7 +26,7 @@ gam_size = size(gam_list)
 iters = gam_size(1,2)
 
 pre_ans_mat = zeros(4)
-ans_mat = pre_ans_mat(:,1:3)
+ans_mat = pre_ans_mat(:,1:4)
 
 
 for g = 1:iters
@@ -46,9 +46,9 @@ w = beta*pre_w_inverted*transition*lambda_mat*ones'
 
 ERS = (transition * (lambda'.*(w+1)))./w
 
-transition_longrun = transition^1000
+transition_longrun = [.987 1-.987; 1-.516 .516]^1000
 
-longrunprob = (transition_longrun(1,:))'
+longrunprob = transition_longrun(:,1)
 
 uncond_equity_ret = longrunprob' * ERS
 
@@ -56,6 +56,7 @@ ans_mat(g,1) = gamma
 ans_mat(g,2) = uncond_equity_ret
 
 %Calculate risk free rate
+
 lambda_rkfree = [lambda(1,1)^(-gamma) 0; 0 lambda(1,2)^(-gamma)]
 
 pre_state_ret = transition*lambda_rkfree

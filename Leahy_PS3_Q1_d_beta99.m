@@ -2,7 +2,7 @@
 %Designed to calculate risk free rate and returns 
 
 %%%%%%
- %Q1b: Risk free rate & unconditional equity return based on Mehra Prescott */
+ %Q1d: Risk free rate & unconditional equity return based on Mehra Prescott */
 %%%%%
 
 
@@ -26,7 +26,7 @@ gam_size = size(gam_list)
 iters = gam_size(1,2)
 
 pre_ans_mat = zeros(4)
-ans_mat = pre_ans_mat(:,1:3)
+ans_mat = pre_ans_mat(:,1:4)
 
 
 for g = 1:iters
@@ -35,7 +35,7 @@ for g = 1:iters
 gamma = gam_list(1,g)
 
 lambda = [1.02252  1-.06785]
-lambda_mat = [(1+mu+delta)^(1-gamma) 0; 0 (1+mu-delta)^(1-gamma)]
+lambda_mat = [lambda(1,1)^(1-gamma) 0; 0 lambda(1,2)^(1-gamma)]
 
 
 %Create W Matrix
@@ -46,7 +46,7 @@ w = beta*pre_w_inverted*transition*lambda_mat*ones'
 
 ERS = (transition * (lambda'.*(w+1)))./w
 
-transition_longrun = transition^1000
+transition_longrun = [.987 1-.987; 1-.516 .516]^1000
 
 longrunprob = transition_longrun(:,1)
 
@@ -59,14 +59,15 @@ ans_mat(g,2) = uncond_equity_ret
 
 lambda_rkfree = [lambda(1,1)^(-gamma) 0; 0 lambda(1,2)^(-gamma)]
 
-pre_state_ret = lambda_rkfree*transition
-state_ret = (beta*sum(pre_state_ret))
+pre_state_ret = transition*lambda_rkfree
+state_ret = (beta*sum(pre_state_ret'))
 state_ret_inv = state_ret.^(-1)
 
 avg_rkfree = state_ret_inv * longrunprob
 
 ans_mat(g,1) = gamma
 ans_mat(g,3) = avg_rkfree
+ans_mat(g,4) = ans_mat(g,2)-ans_mat(g,3)
 
 end
 

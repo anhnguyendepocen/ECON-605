@@ -2,7 +2,7 @@
 %Designed to calculate risk free rate and returns 
 
 %%%%%%
- %Q1b: Risk free rate & unconditional equity return based on Mehra Prescott */
+ %Q1d: Risk free rate & unconditional equity return based on Mehra Prescott */
 %%%%%
 
 
@@ -46,7 +46,7 @@ w = beta*pre_w_inverted*transition*lambda_mat*ones'
 
 ERS = (transition * (lambda'.*(w+1)))./w
 
-transition_longrun = transition^1000
+transition_longrun = [.987 1-.987; 1-.516 .516]^1000
 
 longrunprob = transition_longrun(:,1)
 
