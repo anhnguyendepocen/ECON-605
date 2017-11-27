@@ -48,7 +48,7 @@ ERS = (transition * (lambda'.*(w+1)))./w
 
 transition_longrun = transition^1000
 
-longrunprob = transition_longrun(:,1)
+longrunprob = (transition_longrun(1,:))'
 
 uncond_equity_ret = longrunprob' * ERS
 
@@ -58,14 +58,15 @@ ans_mat(g,2) = uncond_equity_ret
 %Calculate risk free rate
 lambda_rkfree = [lambda(1,1)^(-gamma) 0; 0 lambda(1,2)^(-gamma)]
 
-pre_state_ret = lambda_rkfree*transition
-state_ret = (beta*sum(pre_state_ret))
+pre_state_ret = transition*lambda_rkfree
+state_ret = (beta*sum(pre_state_ret'))
 state_ret_inv = state_ret.^(-1)
 
 avg_rkfree = state_ret_inv * longrunprob
 
 ans_mat(g,1) = gamma
 ans_mat(g,3) = avg_rkfree
+ans_mat(g,4) = ans_mat(g,2)-ans_mat(g,3)
 
 end
 
