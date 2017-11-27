@@ -1,7 +1,6 @@
 % Created by RM on 2017.11.25 for ECON 605 Leahy PS 3 Q1
 %Designed to calculate risk free rate and returns 
-% Created by RM on 2017.11.25 for ECON 605 Leahy PS 3 Q1
-%Designed to calculate risk free rate and returns 
+
 
 %%%%%%
  %Q1e: Risk free rate & unconditional equity return based on Mehra Prescott */
