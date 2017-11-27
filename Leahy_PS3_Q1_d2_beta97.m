@@ -48,7 +48,7 @@ ERS = (transition * (lambda'.*(w+1)))./w
 
 transition_longrun = [.987 1-.987; 1-.516 .516]^1000
 
-longrunprob = transition_longrun(:,1)
+longrunprob = transition_longrun(1,:)'
 
 uncond_equity_ret = longrunprob' * ERS
 
