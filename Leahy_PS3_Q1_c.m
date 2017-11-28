@@ -70,7 +70,8 @@ ans_mat(g,4) = ans_mat(g,2)-ans_mat(g,3)
 
 end
 
-ans_mat
+ans_mat_1c = ans_mat
+
  
 
 
