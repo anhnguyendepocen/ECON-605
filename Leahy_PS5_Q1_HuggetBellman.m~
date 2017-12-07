@@ -1,0 +1,24 @@
+%Created by RM on 2017.12.07
+%For Hugget Model in ECON 605 PS 5 Q1
+
+% Initialize parameters
+
+r = .05
+p = .8
+q = .55
+gamma = 4
+beta = .95
+
+transition = [p 1-p; 1-q q]
+income = [12 25]
+
+assets = [0:20000]'
+assetsprime = [0:20000]'
+assets = assets ./ 2
+assetsprime = assetsprime ./ 2
+
+%Now Need to Iterate to Pick consumption
+
+input_inst_utils = (1+r) .* assets + income - assets[r
+
+
