@@ -12,7 +12,7 @@ beta = .95
 transition = [p 1-p; 1-q q]
 income = [12 25]
 
-assets = [0:500]';
+assets = [-200:400]';
 %assetsprime = [0:1000]'
 assetspace = assets ./ 5
 %assetsprime = assetsprime ./ 5
@@ -85,13 +85,83 @@ iter
 
 end;
 
+%part 3
+%construct the matrix of transitions from (a,y) to (a',y') 
+%given initial asset, maximize u + beta v
 
 
+next_value = zeros(sizeassets,sizetransition,sizeassets,sizetransition);
+for i = 1:sizeassets;
+    for j=1:sizeassets ;
+        for k=1:sizetransition; 
+            for k2 = 1:sizetransition;
+                    next_value(i,k,j,k2) = utilspace(i,j*k) +  beta * transition(k,k2) * v(i,k2);
+            end;
+         end;
+    end;
+    i
+end;
 
+%%
+ergodic_choice = zeros(sizeassets,sizetransition,sizetransition);
+ergodic_value = ergodic_choice - 1000;
+%assume only make one choice from each asset + state combo
 %for i = 1:sizeassets;
 %    for k = 1:sizetransition;
-%        bestchoices(i,k) = tomax(i,max,k)
+for i = 1:sizeassets;
+    for j=1:sizeassets ;
+        for k=1:sizetransition; 
+            for k2 = 1:sizetransition;
+                if ergodic_value(i,k,k2) < next_value(i,k,j,k2);
+                ergodic_choice(i,k,k2) = j;
+                ergodic_value(i,k,k2) = next_value(i,k,j,k2);
+                end;
+            end;
+         end;
+    end;
+    i
+end;       
+
+%%
+
+ergodic_density = zeros(sizeassets,sizetransition,sizeassets,sizetransition);
+ergodic_count = zeros(sizeassets,sizetransition,sizeassets,sizetransition);
+ergodic_transition = transition^1000
+
+for i=1:sizeassets;
+       for j=1:sizeassets;
+           for k=1:sizetransition;
+             for k2=1:sizetransition;
+                if ergodic_choice(i,k,k2) == j;
+                    ergodic_density(i,k,j,k2) = ergodic_transition(1,k) * ergodic_transition(1,k2);
+                    ergodic_count(i,k,j,k2) =  ergodic_count(i,k,j,k2) + 1;             
+                end;
+             end;
+           end;
+           
+       end;
+       i
+end;
+           
+
+%%
+%check row sums
+
+check_den=zeros(sizeassets,1);
+check_count = zeros(sizeassets,1);
+
+for i=1:sizeassets;
+       for j=1:sizeassets;
+           for k=1:sizetransition;
+             for k2=1:sizetransition;
+                 check_den(i,1) = check_den(i,1) + ergodic_density(i,k,j,k2);
+                 check_count(i,1) = check_count(i,1) + ergodic_count(i,k,j,k2);
+             end;
+           end;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+       end;
+end;
         
+
     
 
 
