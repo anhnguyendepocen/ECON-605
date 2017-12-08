@@ -90,12 +90,12 @@ end;
 %given initial asset, maximize u + beta v
 
 
-next_value = zeros(sizeassets,sizetransition,sizeassets,sizetransition);
+next_value = zeros(sizeassets,sizetransition,sizeassets);
 for i = 1:sizeassets;
     for j=1:sizeassets ;
         for k=1:sizetransition; 
             for k2 = 1:sizetransition;
-                    next_value(i,k,j,k2) = utilspace(i,j*k) +  beta * transition(k,k2) * v(i,k2);
+                    next_value(i,k,j) = utilspace(i,j*k) +  beta * transition(k,k2) * v(i,k2);
             end;
          end;
     end;
@@ -103,24 +103,42 @@ for i = 1:sizeassets;
 end;
 
 %%
-ergodic_choice = zeros(sizeassets,sizetransition,sizetransition);
-ergodic_value = ergodic_choice - 1000;
+%ergodic_choice = zeros(sizeassets,sizetransition,sizetransition);
+%ergodic_value = ergodic_choice - 1000;
 %assume only make one choice from each asset + state combo
 %for i = 1:sizeassets;
 %    for k = 1:sizetransition;
+%for i = 1:sizeassets;
+ %   for j=1:sizeassets ;
+ %       for k=1:sizetransition; 
+ %           for k2 = 1:sizetransition;
+ %               if ergodic_value(i,k,k2) < next_value(i,k,j,k2);
+ %               ergodic_choice(i,k,k2) = j;
+ %               ergodic_value(i,k,k2) = next_value(i,k,j,k2);
+ %               end;
+ %           end;
+  %       end;
+  %  end;
+  %  i
+%end; 
+
+ergodic_choice = zeros(sizeassets,sizetransition);
+ergodic_value = ergodic_choice - 1000;
+%assume only make one choice from each asset + state combo
+
 for i = 1:sizeassets;
     for j=1:sizeassets ;
         for k=1:sizetransition; 
-            for k2 = 1:sizetransition;
-                if ergodic_value(i,k,k2) < next_value(i,k,j,k2);
-                ergodic_choice(i,k,k2) = j;
-                ergodic_value(i,k,k2) = next_value(i,k,j,k2);
-                end;
+            %for k2 = 1:sizetransition;
+                if ergodic_value(i,k) < next_value(i,k,j);
+                ergodic_choice(i,k) = j;
+                ergodic_value(i,k) = next_value(i,k,j);
+               % end;
             end;
          end;
     end;
     i
-end;       
+end;   
 
 %%
 
@@ -132,9 +150,28 @@ for i=1:sizeassets;
        for j=1:sizeassets;
            for k=1:sizetransition;
              for k2=1:sizetransition;
-                if ergodic_choice(i,k,k2) == j;
-                    ergodic_density(i,k,j,k2) = ergodic_transition(1,k) * ergodic_transition(1,k2);
-                    ergodic_count(i,k,j,k2) =  ergodic_count(i,k,j,k2) + 1;             
+                if ergodic_choice(i,k) == j;
+                    ergodic_density(i,k,j,k2) = ergodic_transition(1,k2) ;
+                    ergodic_count(i,k,j,k2) =  ergodic_count(i,k,j,k2) + 1; 
+                end;
+             end;
+           end;
+           
+       end;
+       i
+end;
+%%
+
+ergodic_density_2d = zeros(sizeassets*sizetransition,sizeassets*sizetransition);
+ergodic_count_2d = zeros(sizeassets*sizetransition,sizeassets*sizetransition);
+
+for i=1:sizeassets;
+       for j=1:sizeassets;
+           for k=1:sizetransition;
+             for k2=1:sizetransition;
+                if ergodic_choice(i,k) == j;
+                    ergodic_density_2d(sizeassets*(k-1)+i,sizeassets*(k2-1)+j) = ergodic_density(i,k,j,k2) ;
+                    ergodic_count_2d(sizeassets*(k-1)+i,sizeassets*(k2-1)+j) =   ergodic_count(i,k,j,k2) ;
                 end;
              end;
            end;
@@ -143,24 +180,10 @@ for i=1:sizeassets;
        i
 end;
            
-
 %%
-%check row sums
+pre_ergodic_density_fin = ergodic_density_2d^1000;
 
-check_den=zeros(sizeassets,1);
-check_count = zeros(sizeassets,1);
-
-for i=1:sizeassets;
-       for j=1:sizeassets;
-           for k=1:sizetransition;
-             for k2=1:sizetransition;
-                 check_den(i,1) = check_den(i,1) + ergodic_density(i,k,j,k2);
-                 check_count(i,1) = check_count(i,1) + ergodic_count(i,k,j,k2);
-             end;
-           end;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-       end;
-end;
-        
+ergodic_density_fin=pre_ergodic_density_fin(1,:);
 
     
 
