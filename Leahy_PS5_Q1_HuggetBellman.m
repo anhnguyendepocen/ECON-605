@@ -47,6 +47,9 @@ for i = 1:sizeassets;
         for k=1:sizetransition;
             input_utils = (1+r)*assetspace(i,1) + income(1,k) - assetspace(j,1);
             utils = (input_utils^(1-gamma)-1)/(1-gamma);
+            if input_utils < 0
+                    utils = -10000000000000;
+            end
             utilspace(i,j,k) = utils;
           
         end;
@@ -221,10 +224,10 @@ history_r(iteration_r,1) = r;
 history_r(iteration_r,2) = bond_clearing;
 
 if bond_clearing > .01
-        rmin = r;
+        rmax = r;
         r = (rmin+rmax)/2;
 elseif bond_clearing < 0
-        rmax =r;
+        rmin =r;
         r = (rmin+rmax)/2;
 end;
 
